@@ -7,7 +7,7 @@ declare -i height=$(($(tput lines)-5)) width=$(($(tput cols)-2))
 # row and column number of head
 declare -i head_r head_c tail_r tail_c
 
-declare -i alive  
+declare -i alive
 declare -i length
 declare body
 
@@ -27,6 +27,7 @@ SIG_DOWN=URG
 SIG_LEFT=IO
 SIG_QUIT=WINCH
 SIG_DEAD=HUP
+SPEED=0.03
 
 # direction arrays: 0=up, 1=right, 2=down, 3=left
 move_r=([0]=-1 [1]=0 [2]=1 [3]=0)
@@ -200,13 +201,13 @@ getchar() {
             [qQ]) kill -$SIG_QUIT $game_pid
                   return
                   ;;
-            [kK]) kill -$SIG_UP $game_pid
+            [kKwW]) kill -$SIG_UP $game_pid
                   ;;
-            [lL]) kill -$SIG_RIGHT $game_pid
+            [lLdD]) kill -$SIG_RIGHT $game_pid
                   ;;
-            [jJ]) kill -$SIG_DOWN $game_pid
+            [jJsS]) kill -$SIG_DOWN $game_pid
                   ;;
-            [hH]) kill -$SIG_LEFT $game_pid
+            [hHaA]) kill -$SIG_LEFT $game_pid
                   ;;
        esac
     done
@@ -227,9 +228,9 @@ game_loop() {
         fi
         move_snake
         draw_board
-        sleep 0.03
+        sleep $SPEED
     done
-    
+
     echo -e "${text_color}Oh, No! You 0xdead$no_color"
 
     # signals the input loop that the snake is dead
